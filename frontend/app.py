@@ -30,8 +30,13 @@ st.markdown("""
 @st.cache_data(ttl=300) # Cache data for 5 minutes
 def get_data(limit=100):
     try:
-        url = f"http://127.0.0.1:8000/trending?limit={limit}"
-        response = requests.get(url, timeout=5)
+        # Pointing to the live Render backend
+        render_url = "https://hn-trending-analytics.onrender.com"
+        url = f"{render_url}/trending?limit={limit}"
+        
+        # Increased timeout to 15s to allow Render to "wake up" if sleeping
+        response = requests.get(url, timeout=60)
+        
         if response.status_code == 200:
             return response.json().get("data", [])
         return None
@@ -52,7 +57,9 @@ st.title("Hacker News Analytics")
 st.markdown("##### Real-time sentiment and topic analysis of the global tech front page.")
 st.write("---")
 
-data = get_data(num_stories)
+# Use a spinner while the Render API wakes up
+with st.spinner("Fetching data from Render... (This may take a moment if the server is waking up)"):
+    data = get_data(num_stories)
 
 if data:
     df = pd.DataFrame(data)
@@ -111,7 +118,7 @@ if data:
 
     st.write("---")
 
-    # --- LIVE FEED ---
+    #  LIVE FEED 
     st.subheader("Detailed Sentiment Feed")
     display_df = df.sort_values(by="timestamp", ascending=False)
 
@@ -124,7 +131,7 @@ if data:
             text_color = "#FF3131"
             label = "NEGATIVE"
         else:
-            text_color = "#000000" # Dimmer grey for neutral
+            text_color = "#000000" 
             label = "NEUTRAL"
 
         with st.container():
@@ -137,4 +144,4 @@ if data:
             )
             st.divider()
 else:
-    st.error("Fatal Error: API Backend Unreachable. Check FastAPI on port 8000.")
+    st.error("Backend Unreachable. The Render service might be sleeping or deploying. Please refresh in a minute.")
