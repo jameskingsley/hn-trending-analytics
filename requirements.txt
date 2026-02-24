@@ -1,0 +1,25 @@
+# API & Web
+fastapi
+uvicorn
+streamlit
+requests
+python-dotenv
+
+# Data & Streaming
+pandas
+plotly
+matplotlib
+numpy
+seaborn
+
+# Orchestration
+prefect
+
+# MLOps & NLP
+scikit-learn
+clearml
+nltk
+textblob
+vaderSentiment
+wordcloud
+matplotlib

@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+prefect
+google-cloud-bigquery
+google-cloud-storage
+vaderSentiment
+python-multipart
+clearml
